@@ -10,6 +10,13 @@ Pregunta de negocio: Which tool interaction format (voice, text, touch, or multi
 
 Ubicacion de archivos: carpeta `bq4/`
 
+### Generacion de Datos Sinteticos (Seed)
+Los datos cargados para la simulacion del pipeline y construccion de los dashboards son **100% sinteticos y generados programmaticamente** (`seed_firestore_bq4.py`), representando 25 usuarios ficticios con correos `@gmail.com` y 200 interacciones realistas distribuidas segun las 12 herramientas del diagrama UML de Ark (`Format: TOUCH, VOICE, TEXT, MULTIMEDIA`).
+- Para poblar o resetear los datos generados:
+  ```bash
+  python seed_firestore_bq4.py
+  ```
+
 ### Flujo de datos
 Firestore (tool_interactions) -> Python Script (Batch) -> CSV / Google Sheets -> Looker Studio.
 
@@ -29,7 +36,7 @@ Firestore (tool_interactions) -> Python Script (Batch) -> CSV / Google Sheets ->
 El pipeline se ejecuta de forma automatica en batch todas las noches mediante GitHub Actions (`.github/workflows/bq4_batch_pipeline.yml`).
 
 ### Construccion del reporte en Looker Studio
-1. Abrir `bq4/bq4_tool_formats_aggregated.csv` en Google Sheets (o subirlo al enlace de Google Drive compartido).
+1. Abrir `bq4/bq4_tool_formats_aggregated.csv` en Google Sheets (o el enlace de Google Drive compartido).
 2. En Looker Studio, conectar la hoja mediante el conector Hojas de calculo de Google.
 3. Agregar grafico de barras con dimension `tool_format` y metrica `total_completions`.
 4. Agregar grafico circular con dimension `tool_format` y metrica `completion_percentage`.
