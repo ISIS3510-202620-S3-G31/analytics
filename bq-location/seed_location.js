@@ -39,7 +39,7 @@ function mondayOf(weeksAgo) {
 }
 
 async function seedLocationData() {
-  console.log(`🌱 Poblando Firestore (${projectId}) con check-ins y coordenadas en Bogotá...`);
+  console.log(` Poblando Firestore (${projectId}) con check-ins y coordenadas en Bogotá...`);
   
   const users = [];
   for (let i = 0; i < USERS; i++) {

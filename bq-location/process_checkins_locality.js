@@ -30,7 +30,7 @@ function coordsToLocality(lat, lng) {
 }
 
 async function runComputation() {
-  console.log('🔄 Consultando check-ins en Firestore...');
+  console.log('Consultando check-ins en Firestore...');
   const snapshot = await db.collectionGroup('check_ins').get();
   
   const rawEntries = [];
