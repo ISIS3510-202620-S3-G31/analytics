@@ -3,9 +3,9 @@ from datetime import datetime, timedelta
 import pandas as pd
 from seed_data_generator import generate_completed_sessions
 
-# id de la carpeta de google drive compartida para guardar el consolidado
+# id de la hoja de calculo creada en google drive
+SPREADSHEET_KEY = "1Xxj0lvWjwAWN8vvdhD163uNZHQUrWnXZSA0qLvfwGOE"
 GOOGLE_DRIVE_FOLDER_ID = "1QMOSYNYalN3F55nZsIYeSCbHaRuVXAjs"
-SHEET_NAME = "bq4_tool_formats_aggregated"
 
 def get_firestore_interactions():
     # lee directamente de cloud firestore si hay service_account.json
@@ -51,13 +51,8 @@ def sync_to_google_drive(df):
         import gspread
         gc = gspread.service_account(filename=key_path)
         
-        # intentar abrir o crear el sheet en la carpeta de drive
-        try:
-            sh = gc.open(SHEET_NAME)
-        except gspread.SpreadsheetNotFound:
-            sh = gc.create(SHEET_NAME, folder_id=GOOGLE_DRIVE_FOLDER_ID)
-            print(f"[OK] Google Sheet creado en Drive: {sh.url}")
-
+        # abrir la hoja de calculo por su ID
+        sh = gc.open_by_key(SPREADSHEET_KEY)
         worksheet = sh.get_worksheet(0)
         worksheet.clear()
         
