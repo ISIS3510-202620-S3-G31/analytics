@@ -11,21 +11,28 @@ try:
 except ImportError:
     HAS_FIREBASE = False
 
-# catalogo de las 12 herramientas del diagrama UML de clases de Ark clasificadas por formato (#34)
+# catalogo exacto de las 12 herramientas del diagrama UML de Ark (#34)
 # Formatos del enum Format del modelo de dominio: TOUCH, VOICE, TEXT, MULTIMEDIA
 TOOLS = [
-    {"toolId": "custom_breathing", "name": "Breathing Exercise (Custom / 4-7-8 / Box)", "format": "touch"},
-    {"toolId": "body_mapping", "name": "Body Mapping Tool", "format": "touch"},
-    {"toolId": "haptic_tapping", "name": "Haptic Feedback Tool", "format": "touch"},
-    {"toolId": "scream_tank", "name": "Scream Tank Tool", "format": "voice"},
-    {"toolId": "blow_it_out", "name": "Blow It Out Tool", "format": "voice"},
-    {"toolId": "voice_journal", "name": "Voice Journal Tool", "format": "voice"},
-    {"toolId": "emotion_detective", "name": "Emotion Detective Tool", "format": "text"},
-    {"toolId": "achievement_jar", "name": "Achievement Jar Tool", "format": "text"},
-    {"toolId": "gratitude_notes", "name": "Gratitude Notes Tool", "format": "text"},
-    {"toolId": "thought_reframing", "name": "Thought Reframing Tool", "format": "text"},
-    {"toolId": "photo_of_the_day", "name": "Photo of the Day Tool", "format": "multimedia"},
-    {"toolId": "visual_anchoring", "name": "Visual Anchoring Tool", "format": "multimedia"},
+    # Formato TOUCH
+    {"toolId": "custom_breathing", "name": "CustomBreathingTool", "format": "touch"},
+    {"toolId": "body_mapping", "name": "BodyMappingTool", "format": "touch"},
+    {"toolId": "muscle_relaxation", "name": "MuscleRelaxationTool", "format": "touch"},
+    {"toolId": "focus_shield", "name": "FocusShieldTool", "format": "touch"},
+    {"toolId": "tear_collection", "name": "TearCollection", "format": "touch"},
+    
+    # Formato VOICE
+    {"toolId": "scream_tank", "name": "ScreamTankTool", "format": "voice"},
+    {"toolId": "blow_it_out", "name": "BlowItOutTool", "format": "voice"},
+    
+    # Formato TEXT
+    {"toolId": "emotional_detective", "name": "EmotionalDetective", "format": "text"},
+    {"toolId": "achievement_jar", "name": "AchievementJarTool", "format": "text"},
+    {"toolId": "alfabetization_tool", "name": "AlfabetizationTool", "format": "text"},
+    
+    # Formato MULTIMEDIA
+    {"toolId": "photo_of_the_day", "name": "PhotoOfTheDayTool", "format": "multimedia"},
+    {"toolId": "dance_with_me", "name": "DanceWithMeTool", "format": "multimedia"},
 ]
 
 # 25 usuarios sinteticos generados con correos gmail.com
@@ -58,7 +65,6 @@ REALISTIC_USERS = [
 ]
 
 def init_firestore():
-    # busca credenciales de servicio en la carpeta actual o superior
     possible_paths = [
         "service_account.json",
         "bq4/service_account.json",
@@ -67,7 +73,7 @@ def init_firestore():
     ]
     key_path = next((p for p in possible_paths if p and os.path.exists(p)), None)
     if not key_path:
-        print("[AVISO] No se encontro service_account.json. Para poblar Firestore coloca el archivo de credenciales.")
+        print("[AVISO] No se encontro service_account.json.")
         return None
 
     if not firebase_admin._apps:
@@ -79,7 +85,6 @@ def clean_previous_seed(db):
     print("[INFO] Limpiando registros anteriores de usuarios de prueba (usr_*)...")
     for user in REALISTIC_USERS:
         user_ref = db.collection("users").document(user["uid"])
-        # eliminar subcolecciones
         for subcol_name in ["tool_interactions", "mood_checkins", "photos", "tool_feedback"]:
             sub_docs = user_ref.collection(subcol_name).limit(100).get()
             for doc in sub_docs:
@@ -95,12 +100,12 @@ def seed_firestore(total_interactions=200):
 
     clean_previous_seed(db)
 
-    print(f"[INFO] Poblando Firestore con {len(REALISTIC_USERS)} usuarios y {total_interactions} interacciones...")
+    print(f"[INFO] Poblando Firestore con las 12 herramientas exactas del diagrama UML...")
     tools_by_format = {}
     for t in TOOLS:
         tools_by_format.setdefault(t["format"], []).append(t)
 
-    format_weights = {"touch": 0.38, "voice": 0.32, "text": 0.18, "multimedia": 0.12}
+    format_weights = {"touch": 0.40, "voice": 0.30, "text": 0.18, "multimedia": 0.12}
     base_time = datetime.now() - timedelta(days=14)
 
     batch = db.batch()
@@ -132,6 +137,7 @@ def seed_firestore(total_interactions=200):
         batch.set(interaction_ref, {
             "userId": user["uid"],
             "toolId": tool["toolId"],
+            "tool_name": tool["name"],
             "tool_format": chosen_format,
             "complete": is_completed,
             "timestamp": interaction_time.isoformat()
@@ -143,7 +149,7 @@ def seed_firestore(total_interactions=200):
             batch = db.batch()
 
     batch.commit()
-    print(f"[OK] Firestore poblado exitosamente con {count} registros de interacciones.")
+    print(f"[OK] Firestore poblado exitosamente con {count} registros.")
 
 if __name__ == "__main__":
     seed_firestore()
