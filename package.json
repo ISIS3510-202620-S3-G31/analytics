@@ -8,7 +8,10 @@
     "clean": "node seed.js --clean",
     "seed:location": "node bq-location/seed_location.js",
     "process:location": "node bq-location/process_checkins_locality.js",
-    "clean:location": "node bq-location/seed_location.js --clean"
+    "clean:location": "node bq-location/seed_location.js --clean",
+    "seed:bq3": "node bq3/seed_recommendations.js",
+    "process:bq3": "node bq3/process_recommendations.js",
+    "clean:bq3": "node bq3/seed_recommendations.js --clean"
   },
   "dependencies": {
     "firebase-admin": "^13.0.0"
