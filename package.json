@@ -1,0 +1,13 @@
+{
+  "name": "ark-analytics",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "seed": "node seed.js",
+    "export": "node export.js",
+    "clean": "node seed.js --clean"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.0.0"
+  }
+}
