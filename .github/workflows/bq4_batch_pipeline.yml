@@ -1,0 +1,28 @@
+name: BQ4 Batch Analytics Pipeline
+
+on:
+  schedule:
+    # ejecuta en batch todas las noches a las 00:00 UTC (Capitulo 9)
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  run-batch-pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install -r bq4/requirements.txt
+
+      - name: Run BQ4 Batch Computation
+        run: |
+          cd bq4
+          python process_bq4_tool_formats.py
