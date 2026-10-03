@@ -5,7 +5,10 @@
   "scripts": {
     "seed": "node seed.js",
     "export": "node export.js",
-    "clean": "node seed.js --clean"
+    "clean": "node seed.js --clean",
+    "seed:location": "node bq-location/seed_location.js",
+    "process:location": "node bq-location/process_checkins_locality.js",
+    "clean:location": "node bq-location/seed_location.js --clean"
   },
   "dependencies": {
     "firebase-admin": "^13.0.0"
