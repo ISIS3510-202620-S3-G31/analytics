@@ -1,0 +1,5 @@
+tool_format,total_completions,unique_users,avg_duration_seconds,completion_percentage
+touch,66,24,108.8,38.6
+voice,48,20,52.7,28.07
+text,29,19,204.6,16.96
+multimedia,28,16,64.9,16.37
