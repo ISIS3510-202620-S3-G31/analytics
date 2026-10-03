@@ -8,12 +8,15 @@ Repositorio de computacion y procesamiento del pipeline de analitica para el pro
 
 Pregunta de negocio: Which tool interaction format (voice, text, touch, or multimedia) do users complete most frequently, measured by the total count of completed tool sessions?
 
+Ubicacion de archivos: carpeta `bq4/`
+
 ### Flujo de datos
 Firestore (tool_interactions) -> Python Script -> CSV -> Google Sheets -> Looker Studio.
 
 ### Ejecucion de scripts (Python)
 1. Instalar dependencias:
    ```bash
+   cd bq4
    pip install -r requirements.txt
    ```
 2. Generar datos seed de interacciones por formato:
@@ -26,7 +29,7 @@ Firestore (tool_interactions) -> Python Script -> CSV -> Google Sheets -> Looker
    ```
 
 ### Construccion del reporte en Looker Studio
-1. Abrir `bq4_tool_formats_aggregated.csv` en Google Sheets (Archivo -> Importar -> Subir).
+1. Abrir `bq4/bq4_tool_formats_aggregated.csv` en Google Sheets (Archivo -> Importar -> Subir).
 2. En Looker Studio, conectar la hoja mediante el conector Hojas de calculo de Google.
 3. Agregar un grafico de barras con dimension `tool_format` y metrica `total_completions`.
 4. Agregar un grafico circular con dimension `tool_format` y metrica `completion_percentage`.
