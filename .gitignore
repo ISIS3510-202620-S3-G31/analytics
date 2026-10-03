@@ -3,5 +3,9 @@ out/
 
 # Firebase service account keys, never commit these
 *-firebase-adminsdk-*.json
+service_account.json
+*.json
 *.pem
 .env
+__pycache__/
+*.pyc
